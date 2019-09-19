@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "venv\\Scripts\\python.exe"
+    "python.pythonPath": "venv\\Scripts\\python.exe",
 
     // django-html 에서도 html emmet 을 적용 시킨다.
 	"emmet.includeLanguages": {
