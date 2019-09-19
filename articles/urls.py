@@ -1,13 +1,14 @@
 from django.urls import path
 from . import views
 
-
-urlpatterns= [
+app_name = 'articles' # url name space 를 만든 것 
+# ==> url 들이 articles 에 있는 ___ 페이지가 된다
+urlpatterns = [
     # 입력 페이지 제공
-    path('new/', views.new),
+    path('new/', views.new, name='new'),
     # 데이터를 전달받아서 article 생성
-    path('create/', views.create),
-    path('', views.index),
-    path('<int:article_pk>/', views.detail),
-    path('<int:article_pk>/delete/', views.delete),
+    path('create/', views.create, name='create'),
+    path('', views.index, name='index'),
+    path('<int:article_pk>/', views.detail, name='detail'),
+    path('<int:article_pk>/delete/', views.delete, name='delete'),
 ]
