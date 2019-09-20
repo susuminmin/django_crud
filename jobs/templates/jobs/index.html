@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}이름 입력 페이지{% endblock title %}
+
+{% block body %}
+
+{% comment %} - `name` 을 입력할 수 있는 `form` 이 있으며 `form` 의 method 는 `POST` 입니다. `form` 은 `/jobs/past_job/` 으로 제출됩니다. {% endcomment %}
+
+<form action="{% url 'jobs:past_job' %}" method='POST'>
+  {% csrf_token %}
+  <input type="text" name='name'>
+  <button type="submit">입력하기</button>
+</form>
+
+{% endblock body %}
