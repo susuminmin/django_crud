@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Article
+from .models import Article, Comment
 
 # Create your views here.
 
@@ -32,9 +32,19 @@ def index(request):
 
 
 def detail(request, article_pk):
+
     # article = Article.objects.get(pk=article_pk)
     article = get_object_or_404(Article, pk=article_pk)
-    context = {'article': article}
+
+    # 위 article 에 달린 모든 댓글 다 꺼내기
+    comments = article.comment_set.all()
+
+    # 저장해서 context에 넣어서 넘김 
+    context = {
+        'article': article,
+        'comments': comments,
+        }
+
     return render(request, 'articles/detail.html', context)
     # return render(request, 'detail', context)
 
@@ -68,3 +78,25 @@ def update(request, article_pk):
     else:
         context = {'article': article}
         return render(request, 'articles/update.html', context)
+
+
+
+
+# 댓글 다는 함수 / variable routing 있으면 request 말고 다른 변수 받는다. 
+def comments_create(request, article_pk):
+    # article_pk 에 해당하는 article 에 새로운 comment 생성
+    # 생성한 다음 article detail page 로 redirect 
+    article = get_object_or_404(Article, pk=article_pk)
+    # 몇번 아티클에 달아줄지 정하는 것 
+    if request.method == 'POST':
+        
+        
+        content = request.POST.get('content')
+        
+        comment = Comment()
+        
+        comment.content = content
+        comment.article = article
+
+        comment.save()
+    return redirect('articles:detail', article.pk)

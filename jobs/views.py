@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Job
+
+# random 과 비슷한 역할 
 from faker import Faker
 
 # Create your views here.

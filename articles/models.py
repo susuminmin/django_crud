@@ -7,3 +7,19 @@ class Article(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
+class Comment(models.Model):
+    # Article model class 를 명시해준다.(1:N 관계를 만들 때 반드시 1이 먼저 선언)
+    # on_delete=models.CASCADE : Article이 삭제되면 Comment 도 함께 삭제
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    content = models.CharField(max_length=200)
+    created_at = models.DateField(auto_now_add=True) # 데이터가 새로 추가됐을 때만 현재 시간 자동으로 생성됨
+    updated_at = models.DateField(auto_now=True) # 추가나 수정이나 언제든지 시간 기록
+    
+
+    # 클래스 안에 또 클래스 (Django meta option 검색해보기)
+    class Meta:
+        ordering = ['-pk']
+
+
+    def __str__(self):
+        return self.content
