@@ -37,13 +37,14 @@ def detail(request, article_pk):
     article = get_object_or_404(Article, pk=article_pk)
 
     # 위 article 에 달린 모든 댓글 다 꺼내기
-    comments = article.comment_set.all()
+    # comments = article.comment_set.all() #--> 역참조 이름 바꿔주고 나서
+    comments = article.comments.all()
 
-    # 저장해서 context에 넣어서 넘김 
+    # 저장해서 context에 넣어서 넘김
     context = {
         'article': article,
         'comments': comments,
-        }
+    }
 
     return render(request, 'articles/detail.html', context)
     # return render(request, 'detail', context)
@@ -80,23 +81,32 @@ def update(request, article_pk):
         return render(request, 'articles/update.html', context)
 
 
-
-
-# 댓글 다는 함수 / variable routing 있으면 request 말고 다른 변수 받는다. 
+# 댓글 다는 함수 / variable routing 있으면 request 말고 다른 변수 받는다.
 def comments_create(request, article_pk):
+
+    # 명세
     # article_pk 에 해당하는 article 에 새로운 comment 생성
-    # 생성한 다음 article detail page 로 redirect 
+    # 생성한 다음 article detail page 로 redirect
     article = get_object_or_404(Article, pk=article_pk)
-    # 몇번 아티클에 달아줄지 정하는 것 
+    # 몇번 아티클에 달아줄지 정하는 것
+    
     if request.method == 'POST':
-        
-        
         content = request.POST.get('content')
-        
         comment = Comment()
-        
         comment.content = content
         comment.article = article
-
         comment.save()
     return redirect('articles:detail', article.pk)
+
+
+# 첫번째 인자는 무조건 request, 다음 인자는 url에서 var routing으로 넘어오는 인자 순서대로 받는다. 
+def comment_delete(request, article_pk, comment_pk):
+    # post 요청으로 들어왔다면 그 때만 댓삭!
+    if request.method == 'POST':
+        # comment_pk 해당 댓글 삭제
+        comment = get_object_or_404(Comment, pk=comment_pk) # 어떤 모델에서 가져올지 받고, primary key 받아서 꺼내준다. (없으면 404 넘긴다.)
+        # comment가 있으면 삭제
+        comment.delete()
+        
+    # 댓삭 후 detail 페이지로 이동시킴
+    return redirect('articles:detail', article_pk) # 어떤 페이지로 넘길지에 대한 article pk 가 필요하다. (마침 위에서 var routing으로 받았으므로 _ ) 

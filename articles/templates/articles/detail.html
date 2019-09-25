@@ -22,7 +22,13 @@
   {% comment %} 데이터가 여러개 -> 반복문(for) 돌면서 꺼내서 하나하나 표시해주기 {% endcomment %}
   <ul>
   {% for comment in comments %}
-    <li>{{ comment.content }}</li>
+    <li>{{ comment.content }}
+    <!-- form tag 로 댓글 하나하나마다 삭제버튼 같이 만들어준다.-->
+    <form action="{% url 'articles:comment_delete' article.pk comment.pk %}" method="POST"> <!-- _ 아니고 . 으로 접근할 수 있는 이유 이해하기 -->
+      {% csrf_token %}
+      <button type="submit">삭제하기</button>
+    </form>
+    </li>
   {% empty %}
     <p>아직 댓글이 없습니다.</p>
   {% endfor %}
