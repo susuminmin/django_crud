@@ -9,11 +9,23 @@
   <hr>
   <p>{{ article.content }}</p>
   <hr>
+
+  <a href="{% url 'articles:index' %}">[뒤로가기]</a>
+
+  {% comment %} 현재 담긴 detail 을 유치한 채 update 로 GET 요청 {% endcomment %}
+  <a href="{% url 'articles:update' article.pk %}">[수정하기]</a>
+
+  {% comment %} article.pk 를 variable routing 으로 넘겨준다. {% endcomment %}
+  <form action="{% url 'articles:delete' article.pk %}" method="POST" onclick="return confirm('Are you sure?')">
+    {% csrf_token %}
+    <button type="submit">[삭제하기]</button>
+  </form>
+
   <h4>Comments</h4>
   {% comment %} Comment 입력 위한 Form {% endcomment %}
-  <form action="{% url 'articles:comments_create' article.pk %}" method='POST'>
+  <form action="{% url 'articles:comment_create' article.pk %}" method='POST'>
     {% csrf_token %}
-    {% comment %} 나중에 넣는 데이터를 name으로 받아서 사용하려고 함  {% endcomment %}
+    {% comment %} 나중에 넣는 데이터를 content 라는 이름으로 받아서 사용하려고 함  {% endcomment %}
     <input type="text" name="content">
     <button type="submit">댓글작성</button> 
   </form>
@@ -21,36 +33,17 @@
 
   {% comment %} 데이터가 여러개 -> 반복문(for) 돌면서 꺼내서 하나하나 표시해주기 {% endcomment %}
   <ul>
-  {% for comment in comments %}
-    <li>{{ comment.content }}
-    <!-- form tag 로 댓글 하나하나마다 삭제버튼 같이 만들어준다.-->
-    <form action="{% url 'articles:comment_delete' article.pk comment.pk %}" method="POST"> <!-- _ 아니고 . 으로 접근할 수 있는 이유 이해하기 -->
-      {% csrf_token %}
-      <button type="submit">삭제하기</button>
-    </form>
-    </li>
-  {% empty %}
-    <p>아직 댓글이 없습니다.</p>
-  {% endfor %}
-
-  
+    {% for comment in comments %}
+      <li>{{ comment.content }}
+        <!-- form tag 로 댓글 하나하나마다 삭제버튼 같이 만들어준다.-->
+        <form action="{% url 'articles:comment_delete' article.pk comment.pk %}" method="POST">
+          {% csrf_token %}
+          <button type="submit">댓글 삭제하기</button>
+        </form>
+      </li>
+    {% empty %}
+      <p>아직 댓글이 없습니다.</p>
+    {% endfor %}
   </ul>
-
-
-  <hr>
-  <a href="{% url 'articles:index' %}">[뒤로가기]</a><br>
-  <a href="{% url 'articles:update' article.pk %}">[수정하기]</a>
-
-
-  {% comment %} article.pk 를 variable routing 으로 넘겨준다. delete 라는 url 에서  {% endcomment %}
-  <form action="{% url 'articles:delete' article.pk %}" method="POST">
-    {% comment %} 우리가 제공하는 form 에서만 삭제하도록 / 안전장치 역할 {% endcomment %}
-    {% csrf_token %}
-    <button type="submit">삭제하기</button>
-  </form>
-
-
-  {% comment %} a tag : GET 요청과 동일 / 주소창에 url 치는 것과 동일 {% endcomment %}
-  <a href="{% url 'articles:delete' article.pk %}" onclick="return confirm('Are you sure?')">[삭제하기]</a>
 
 {% endblock body %}

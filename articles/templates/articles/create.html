@@ -3,14 +3,17 @@
 {% block title %}New Article{% endblock title %}
 
 {% block body %}
-<h1>New article</h1>
+
+<h1>Create New Article</h1>
 {% comment %} method 안 적으면 GET으로 인식 --> POST로 적어야 POST 요청 {% endcomment %}
-<form action="{% url 'articles:create' %}" method='POST'>
+<form action="{% url 'articles:create' %}" method="POST">
   {% csrf_token %}
   <input type="text" name='title'><br>
   <textarea name="content" cols="30" rows="10"></textarea>
-  <button type="submit">작성하기</button>
+  <button type="submit">CREATE</button>
 <br/>
 </form>
-<a href="{% url 'articles:index' %}">[뒤로가기]</a>
+
+<a href="{% url 'articles:index' %}">Back To INDEX Page</a>
+
 {% endblock body %}
